@@ -1,0 +1,6 @@
+[submodule "RaspberryPi/KiiThingSDK"]
+	path = RaspberryPi/KiiThingSDK
+	url = git@github.com:KiiCorp/KiiThingSDK.git
+[submodule "RaspberryPi/mqttcd"]
+	path = RaspberryPi/mqttcd
+	url = git@github.com:lostman-github/mqttcd.git
