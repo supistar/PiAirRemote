@@ -28,7 +28,7 @@ int main(void) {
     char* app_id = NULL;
     char* app_key = NULL;
     char* site_url = NULL;
-    config_error_code_t conf_error_info = config_load("./appinfo.json", &app_info);
+    config_error_code_t conf_error_info = config_load("appinfo.json", &app_info);
     config_error_code_t read_error_appid = config_get(app_info, "AppID", &app_id);
     config_error_code_t read_error_appkey = config_get(app_info, "AppKey", &app_key);
     config_error_code_t read_error_site = config_get(app_info, "Site", &site_url);
@@ -42,7 +42,7 @@ int main(void) {
     config_t* credential = NULL;
     char* thing_id = NULL;
     char* thing_token = NULL;
-    config_error_code_t conf_error_credential = config_load("./credential.json", &credential);
+    config_error_code_t conf_error_credential = config_load("credential.json", &credential);
     config_error_code_t read_error_id = config_get(credential, "ThingID", &thing_id);
     config_error_code_t read_error_token = config_get(credential, "ThingToken", &thing_token);
     if (conf_error_credential || read_error_id || read_error_token) {
