@@ -6,10 +6,12 @@
 #include <jansson.h>
 #include "config.h"
 
-config_error_code_t config_load(const char* config_file_path, config_t** out_config) {
+config_error_code_t config_load(const char* config_file_name, config_t** out_config) {
     json_t *json_root;
     json_error_t json_error;
 
+    char config_file_path[256];
+    sprintf(config_file_path, "%s/.PiAirRemote/%s", getenv("HOME"), config_file_name);
     json_root = json_load_file(config_file_path, 0, &json_error);
 
     if (!json_root) {

@@ -9,7 +9,7 @@ typedef enum config_error_code_t {
 
 typedef json_t config_t;
 
-config_error_code_t config_load(const char* config_file_path, config_t** out_config);
+config_error_code_t config_load(const char* config_file_name, config_t** out_config);
 
 config_error_code_t config_get(const config_t* config, const char* config_key, char** out_value);
 
