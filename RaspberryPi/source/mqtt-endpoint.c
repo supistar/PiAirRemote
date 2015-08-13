@@ -7,7 +7,6 @@
 #include <jansson.h>
 #include <sys/time.h>
 #include "config.h"
-#include "w1.h"
 
 long long get_current_time_millis(void) {
     struct timeval t;
@@ -36,8 +35,6 @@ int main(void) {
         goto CLEANUP_CONFIG_APPINFO;
     }
 
-    kii_app_t app = kii_init_app(app_id, app_key, site_url);
-
     // KiiThing
     config_t* credential = NULL;
     char* thing_id = NULL;
@@ -48,12 +45,14 @@ int main(void) {
     if (conf_error_credential || read_error_id || read_error_token) {
         goto CLEANUP_CONFIG_CREDENTIAL;
     }
+
+    kii_app_t app = kii_init_app(app_id, app_key, site_url);
     kii_thing_t kii_thing = kii_thing_deserialize(thing_id);
 
     // Install push
     kii_bool_t is_development = KII_TRUE;
     kii_char_t* installation_id = NULL;
-    
+
     error_code = kii_install_thing_push(app, thing_token, is_development, &installation_id);
     if (error_code != KIIE_OK) {
         goto CLEANUP_INSTALLATION_ID;
@@ -111,7 +110,6 @@ GET_MQTT_ENDPOINT:
         printf("MQTT endpoint configuration is saved on disk :)\n");
     }
 
-
 CLEANUP_MQTT_CONFIG:
     config_decref(mqtt);
 
@@ -123,6 +121,7 @@ CLEANUP_INSTALLATION_ID:
 
 CLEANUP_KIITHING:
     kii_dispose_thing(kii_thing);
+    kii_dispose_app(app);
 
 CLEANUP_CONFIG_CREDENTIAL:
     config_decref(credential);
@@ -131,7 +130,6 @@ CLEANUP_CONFIG_APPINFO:
     config_decref(app_info);
 
 CLEANUP:
-    kii_dispose_app(app);
     kii_global_cleanup();
 
 END:

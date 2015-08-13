@@ -45,7 +45,6 @@ int main(void) {
     if (conf_error_info || read_error_appid || read_error_appkey || read_error_site) {
         goto CLEANUP_CONFIG_APPINFO;
     }
-
     kii_app_t app = kii_init_app(app_id, app_key, site_url);
 
     // Register KiiThing
@@ -57,11 +56,10 @@ int main(void) {
     printf("Vendor Thing ID: %s\n", vendor_thing_id);
     printf("Password: %s\n", thing_password);
 
-    error_code = kii_register_thing(app, vendor_thing_id, thing_password,
-            NULL, NULL, &kii_thing, &access_token);
+    error_code = kii_register_thing(app, vendor_thing_id, thing_password, NULL, NULL, &kii_thing, &access_token);
     if (error_code != KIIE_OK) {
         printf("Couldn't register new thing. Already registered?\n");
-        goto CLEANUP;
+        goto CLEANUP_KII_APP;
     }
 
     // Print information of registered KiiThing
@@ -88,11 +86,13 @@ CLEANUP_KII_THINGS:
     kii_dispose_kii_char(access_token);
     kii_dispose_thing(kii_thing);
 
+CLEANUP_KII_APP:
+    kii_dispose_app(app);
+
 CLEANUP_CONFIG_APPINFO:
     config_decref(app_info);
 
 CLEANUP:
-    kii_dispose_app(app);
     kii_global_cleanup();
 
 END:

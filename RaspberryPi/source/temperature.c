@@ -32,11 +32,9 @@ int main(void) {
     config_error_code_t read_error_appid = config_get(app_info, "AppID", &app_id);
     config_error_code_t read_error_appkey = config_get(app_info, "AppKey", &app_key);
     config_error_code_t read_error_site = config_get(app_info, "Site", &site_url);
-    if (conf_error_info || read_error_appid || read_error_appkey | read_error_site) {
+    if (conf_error_info || read_error_appid || read_error_appkey || read_error_site) {
         goto CLEANUP_CONFIG_APPINFO;
     }
-
-    kii_app_t app = kii_init_app(app_id, app_key, site_url);
 
     // KiiThing
     config_t* credential = NULL;
@@ -46,12 +44,14 @@ int main(void) {
     config_error_code_t read_error_id = config_get(credential, "ThingID", &thing_id);
     config_error_code_t read_error_token = config_get(credential, "ThingToken", &thing_token);
     if (conf_error_credential || read_error_id || read_error_token) {
-        goto CLEANUP_CONFIG_APPINFO;
+        goto CLEANUP_CONFIG_CREDENTIAL;
     }
+
+    kii_app_t app = kii_init_app(app_id, app_key, site_url);
+    kii_thing_t kii_thing = kii_thing_deserialize(thing_id);
 
     // Initialize target kii bucket
     const char* bucket_name = "temperature";
-    kii_thing_t kii_thing = kii_thing_deserialize(thing_id);
     kii_bucket_t kii_bucket = kii_init_thing_bucket(kii_thing, bucket_name);
 
     // Get temperature
@@ -62,7 +62,6 @@ int main(void) {
     json_t* json = NULL;
 
     printf("Current time: %lld\n", get_current_time_millis());
-    //printf("Current time: %ld\n", get_current_time_millis());
     json = json_pack("{s:f, s:I}", "temperature", temp, "time", (json_int_t)(get_current_time_millis()));
     if (json == NULL) {
         goto CLEANUP_KIIBUCKET;
@@ -72,8 +71,7 @@ int main(void) {
     kii_char_t* object_id = NULL;
     kii_char_t* etag = NULL;
 
-    error_code = kii_create_new_object(app, thing_token, kii_bucket, json,
-            &object_id, &etag);
+    error_code = kii_create_new_object(app, thing_token, kii_bucket, json, &object_id, &etag);
     if (error_code != KIIE_OK) {
         goto CLEANUP_JSON;
     }
@@ -94,6 +92,7 @@ CLEANUP_KIIBUCKET:
 
 CLEANUP_KIITHING:
     kii_dispose_thing(kii_thing);
+    kii_dispose_app(app);
 
 CLEANUP_CONFIG_CREDENTIAL:
     config_decref(credential);
@@ -102,7 +101,6 @@ CLEANUP_CONFIG_APPINFO:
     config_decref(app_info);
 
 CLEANUP:
-    kii_dispose_app(app);
     kii_global_cleanup();
 
 END:
