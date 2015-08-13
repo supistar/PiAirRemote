@@ -4,7 +4,7 @@ CC = gcc
 BUILD = build
 BUILD_LIB = lib
 
-TARGETS = register temperature w1-simple
+TARGETS = register temperature w1-simple mqtt-endpoint
 
 SOURCE_DIR = source
 KII_SDK_DIR = KiiThingSDK/KiiThingSDK
@@ -55,6 +55,7 @@ $(TARGETS):
 	$(CC) $^ $(CFLAGS) $(LDFLAGS) -o $(BUILD)/$@
 
 register: $(addprefix $(SOURCE_DIR)/, register.c config.c)
+mqtt-endpoint: $(addprefix $(SOURCE_DIR)/, mqtt-endpoint.c config.c)
 temperature: $(addprefix $(SOURCE_DIR)/, temperature.c config.c w1.c)
 w1-simple: $(addprefix $(SOURCE_DIR)/, w1-simple.c)
 

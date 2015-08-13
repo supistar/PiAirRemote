@@ -11,6 +11,8 @@ typedef enum config_error_code_t {
 
 typedef json_t config_t;
 
+config_t* config_object(void);
+
 config_error_code_t config_load(const char* config_file_name, config_t** out_config);
 
 config_error_code_t config_save(const char* config_file_name, const config_t* config);

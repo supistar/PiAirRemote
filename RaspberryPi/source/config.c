@@ -56,8 +56,8 @@ config_error_code_t config_get(const config_t* config, const char* config_key, c
 }
 
 config_error_code_t config_set(config_t* config, const char* config_key, const char* config_value) {
-    int ret = json_object_set(config, config_key, json_string(config_value));
-    if (!ret) {
+    int ret = json_object_set_new(config, config_key, json_string(config_value));
+    if (ret != 0) {
         perror("Error: There is no corresponding value\n");
         return CONFIG_SET_FAIL;
     }
