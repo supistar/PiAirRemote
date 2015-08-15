@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <jansson.h>
 #include "config.h"
 
 char* _get_config_file_path(const char* config_file_name) {

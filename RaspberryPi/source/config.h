@@ -1,5 +1,7 @@
 /* vim: set et fenc=utf-8 ff=unix ts=4 sw=4 sts=4 : */
 
+#include <jansson.h>
+
 typedef enum config_error_code_t {
     CONFIG_OK = 0,
     CONFIG_FILE_NOT_EXIST,
